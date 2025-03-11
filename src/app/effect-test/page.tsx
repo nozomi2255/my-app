@@ -6,7 +6,7 @@ export default function MyComponent() {
 
     // コンポーネントがマウントされた最初だけ実行
     useEffect(() => {
-        fetch('/api/hello')
+        fetch('/api/hello') // サーバーからデータを取得
         .then((response) => response.json())
         .then((data) => {
             console.log(data);
