@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-
+import Header from '../../components/Header';
 // 子コンポーネント
 type CounterProps = {
     message: string;
@@ -27,6 +27,7 @@ function Counter({ message }: CounterProps) {
 export default function CounterPage() {
   return (
     <div className="p-8">
+      <Header />
       <Counter message="Hello Counter" />
     </div>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeProvider } from './ThemeContext'; // ThemeContext.tsx のパスに合わせて調整してください
+import { ThemeProvider } from './ThemeContext'; 
 
 type AppLayoutProps = {
   children: React.ReactNode;
