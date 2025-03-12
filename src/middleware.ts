@@ -1,17 +1,20 @@
 // src/middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getSession } from "./lib/auth";
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 
-export async function middleware(request: NextRequest) {
+export async function middleware(req: NextRequest) {
     // /dashboard を含むパスの場合に認証チェックを行う
-    if (request.nextUrl.pathname.startsWith("/dashboard")) {
-      // セッション情報を取得（ここでは getSession がリクエストを受け取ってセッション情報を返すと仮定）
-      const session = await getSession(request);
+    if (req.nextUrl.pathname.startsWith("/dashboard")) {
+      // Supabase のミドルウェア用クライアントを作成
+      const supabase = createMiddlewareClient({ req, res: NextResponse.next() })
+
+      // セッション情報を取得
+      const { data: { session } } = await supabase.auth.getSession()
       
       // セッション情報がない、またはユーザー情報が含まれていなければ /login へリダイレクト
       if (!session || !session.user) {
-        const loginUrl = new URL("/login", request.url);
+        const loginUrl = new URL("/login", req.url);
         return NextResponse.redirect(loginUrl);
       }
     }

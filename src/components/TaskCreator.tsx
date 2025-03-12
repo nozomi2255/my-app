@@ -1,6 +1,7 @@
 // src/components/TaskCreator.tsx
 'use client'
 import React, { useState } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function TaskCreator() {
   const [title, setTitle] = useState('');
@@ -8,21 +9,20 @@ export default function TaskCreator() {
 
   const createTask = async () => {
     try {
-      const response = await fetch("/api/tasks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, completed: false }),
-      });
+      // Supabase クライアントを利用して tasks テーブルにタスクを追加
+      const { data, error } = await supabase
+        .from('tasks')
+        .insert({ title, completed: false })
+        .select(); // 挿入後の行を返すために select() を追加
 
-      if (response.status === 201) {
-        const data = await response.json();
-        setMessage(`タスク作成成功: ${data.task.title}`);
-      } else if (response.status === 400) {
-        setMessage("不正なリクエストです。");
-      } else if (response.status === 500) {
-        setMessage("サーバーエラーが発生しました。");
+      if (error) {
+        // エラーがある場合、エラーメッセージをセット
+        setMessage(`エラー: ${error.message}`);
+      } else if (data && data.length > 0) {
+        // 成功時は挿入されたタスクのタイトルを表示
+        setMessage(`タスク作成成功: ${data[0].title}`);
       } else {
-        setMessage("その他のエラーが発生しました。");
+        setMessage("タスク作成に失敗しました。");
       }
     } catch (error) {
       console.error("タスク作成エラー:", error);

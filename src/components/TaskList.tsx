@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabaseClient'; // Supabase クライアントをインポート
 
 type Task = {
   id: number;
@@ -13,21 +14,29 @@ export default function TaskList() {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      try {
-        const response = await fetch("/api/tasks", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
+      // セッション情報（ログインユーザー）を取得
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        setError("セッションの取得に失敗しました");
+        return;
+      }
+      if (!session) {
+        setError("ユーザーがログインしていません");
+        return;
+      }
 
-        if (response.ok) {
-          const data = await response.json();
-          setTasks(data.tasks);
-        } else {
-          setError("タスク一覧の取得に失敗しました。");
-        }
-      } catch (err) {
-        console.error(err);
-        setError("ネットワークエラーが発生しました。");
+      // ログイン済みユーザーのIDでタスクをフィルタ
+      const userId = session.user.id;
+
+      const { data, error: selectError } = await supabase
+        .from('tasks')
+        .select('*')
+        .eq('user_id', userId);
+
+      if (selectError) {
+        setError("タスク一覧の取得に失敗しました: " + selectError.message);
+      } else {
+        setTasks(data as Task[]);
       }
     };
 
