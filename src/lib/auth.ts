@@ -16,11 +16,17 @@ export async function getSession(request: NextRequest) {
   // 実際は iron-session の withIronSessionApiRoute / withIronSessionSsr を利用することが多いです
   // ここでは仮に、セッションが存在すれば { user: dummyUser } を返す例とします。
   const token = request.cookies.get("token");
+
+  {/*
   if (token) {
     // 仮のユーザー情報（本来はトークンを検証して取得します）
     return { user: { id: 1, name: "John Doe", email: "john@example.com" } };
   }
   return null;
+  */}
+
+  // テスト用に、常に dummyUser を返すように変更
+  return { user: { id: 1, name: "John Doe", email: "john@example.com" } };
 }
 
 // setSession: ユーザー情報をセッションに保存する関数（ログイン時に利用）
