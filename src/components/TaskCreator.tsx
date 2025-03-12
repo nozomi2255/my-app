@@ -9,10 +9,22 @@ export default function TaskCreator() {
 
   const createTask = async () => {
     try {
+      // 現在のセッション情報を取得
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        setMessage(`セッション取得エラー: ${sessionError.message}`);
+        return;
+      }
+      if (!session || !session.user) {
+        setMessage("ログインが必要です");
+        return;
+      }
+
+      const userId = session.user.id;
       // Supabase クライアントを利用して tasks テーブルにタスクを追加
       const { data, error } = await supabase
         .from('tasks')
-        .insert({ title, completed: false })
+        .insert({ title, user_id: userId })
         .select(); // 挿入後の行を返すために select() を追加
 
       if (error) {
