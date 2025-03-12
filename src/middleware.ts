@@ -1,6 +1,7 @@
 // src/middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getSession } from "./lib/auth";
 
 export async function middleware(request: NextRequest) {
     // /dashboard を含むパスの場合に認証チェックを行う
@@ -17,4 +18,4 @@ export async function middleware(request: NextRequest) {
     
     // 認証が不要な場合は通常のレスポンスを返す
     return NextResponse.next();
-  }
+}

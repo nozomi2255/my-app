@@ -17,7 +17,7 @@ function HeaderContent() {
 
   return (
     <header className={`p-4 flex justify-between items-center ${bgClass}`}>
-      <h1 className={`text-xl font-bold ${textClass}`}>My App</h1>
+      <h1 className={`text-xl font-bold ${textClass}`}>Headerコンポーネント</h1>
       <button 
         onClick={toggleTheme} // ボタン押下でテーマ切り替え
         className="px-4 py-2 rounded bg-blue-500 text-white"
