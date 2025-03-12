@@ -1,24 +1,20 @@
 // src/middleware.ts
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
+import { type NextRequest } from 'next/server'
+import { updateSession } from './utils/supabase/middleware'
 
-export async function middleware(req: NextRequest) {
-    // /dashboard を含むパスの場合に認証チェックを行う
-    if (req.nextUrl.pathname.startsWith("/dashboard")) {
-      // Supabase のミドルウェア用クライアントを作成
-      const supabase = createMiddlewareClient({ req, res: NextResponse.next() })
+export async function middleware(request: NextRequest) {
+    return await updateSession(request)
+}
 
-      // セッション情報を取得
-      const { data: { session } } = await supabase.auth.getSession()
-      
-      // セッション情報がない、またはユーザー情報が含まれていなければ /login へリダイレクト
-      if (!session || !session.user) {
-        const loginUrl = new URL("/login", req.url);
-        return NextResponse.redirect(loginUrl);
-      }
-    }
-    
-    // 認証が不要な場合は通常のレスポンスを返す
-    return NextResponse.next();
+export const config = {
+  matcher: [
+    /*
+     * 次のパスで始まるリクエストにはミドルウェアを適用しない:
+     * - _next/static (静的ファイル)
+     * - _next/image (画像最適化用ファイル)
+     * - favicon.ico (ファビコン)
+     * 必要に応じて、このパターンを拡張してください。
+     */
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
 }

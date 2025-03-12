@@ -1,11 +1,13 @@
 'use client'
 import React, { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,7 +19,7 @@ export default function LoginPage() {
       setMessage(`エラー: ${error.message}`);
     } else {
       setMessage("ログイン成功！");
-      // ログイン後にリダイレクトさせたい場合は、router.push('/dashboard') などを利用します
+      router.push('../supabase-test');
     }
   };
 

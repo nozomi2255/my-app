@@ -32,9 +32,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
-        <TaskList />
-        <TaskCreator />
-        <DashboardClient user={{ name: "John Doe", email: "john@example.com" }} />
         {children}
       </body>
     </html>
