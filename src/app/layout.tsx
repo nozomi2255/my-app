@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "../components/Header"; // Header コンポーネントをインポート
-import DashboardClient from "../components/DashboardClient"; // DashboardClient をインポート
-import TaskList from "@/components/TaskList";
-import TaskCreator from "../components/TaskCreator";
 import "./globals.css";
 
 const geistSans = Geist({
