@@ -1,6 +1,6 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
-import DashboardClient from './DashboardClient';
+import DashboardClient from '../../components/DashboardClient';
 import { User } from '@supabase/supabase-js';
 
 export default async function DashboardPage() {

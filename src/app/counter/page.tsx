@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import Header from '../../components/Header';
+import { useRouter } from 'next/navigation';
 // 子コンポーネント
 type CounterProps = {
     message: string;
@@ -25,10 +26,19 @@ function Counter({ message }: CounterProps) {
 
 // 親コンポーネント
 export default function CounterPage() {
+  const router = useRouter();
   return (
+    <>
     <div className="p-8">
-      <Header />
       <Counter message="Hello Counter" />
     </div>
+    {/* Counter 画面への遷移ボタンを追加 */}
+    <button
+    onClick={() => router.push('/dashboard')}
+    className="mt-4 px-4 py-2 bg-purple-500 text-white rounded"
+    >
+      ダッシュボード画面へ遷移する
+    </button>
+    </>
   );
 }

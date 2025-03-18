@@ -21,3 +21,25 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* デフォルトのスタイル */
+.light {
+  background-color: white;
+  color: black;
+}
+
+.dark {
+  background-color: #1a202c; /* ダークモードの背景 */
+  color: white;
+}
+
+/* ヘッダーの背景も変更 */
+.light .header {
+  background-color: white;
+  color: black;
+}
+
+.dark .header {
+  background-color: #2d3748; /* Tailwindのgray-800 相当 */
+  color: white;
+}

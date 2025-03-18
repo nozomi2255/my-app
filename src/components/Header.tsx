@@ -1,6 +1,7 @@
+// components/Header.tsx
 'use client'
 import React, { useContext } from 'react';
-import { ThemeContext, ThemeProvider } from '../app/ThemeContext'; // ThemeContext.tsx のパスに合わせて変更してください
+import { ThemeContext, ThemeProvider } from './ThemeContext';
 
 function HeaderContent() {
   // ThemeContext を利用して現在のテーマとテーマ切り替え関数を取得
@@ -17,7 +18,7 @@ function HeaderContent() {
 
   return (
     <header className={`p-4 flex justify-between items-center ${bgClass}`}>
-      <h1 className={`text-xl font-bold ${textClass}`}>Headerコンポーネント</h1>
+      <h1 className={`text-xl font-bold ${textClass}`}>タスク管理アプリ</h1>
       <button 
         onClick={toggleTheme} // ボタン押下でテーマ切り替え
         className="px-4 py-2 rounded bg-blue-500 text-white"
@@ -31,8 +32,6 @@ function HeaderContent() {
 // Headerコンポーネント：ThemeProviderでHeaderContentをラップしています
 export default function Header() {
   return (
-    <ThemeProvider>
       <HeaderContent />
-    </ThemeProvider>
   );
 }
