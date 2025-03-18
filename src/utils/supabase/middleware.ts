@@ -38,9 +38,8 @@ export async function updateSession(request: NextRequest) {
 
   if (
     !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/supabase-test') &&
-    !request.nextUrl.pathname.startsWith('/signup') // この条件を追加
+    !request.nextUrl.pathname.startsWith('/login')
+
   ) {
     // ユーザーがいない場合、ログインページにリダイレクトすることで応答する可能性があります。
     const url = request.nextUrl.clone()
