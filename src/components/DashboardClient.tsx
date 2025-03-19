@@ -1,12 +1,10 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import React, { useState, useEffect } from 'react'
-import { createClient } from '../utils/supabase/client'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Task, User } from '../app/types'
 
 export default function Dashboard() {
   const router = useRouter()
-  const supabase = createClient()
 
   const [user, setUser] = useState<User | null>(null)
   const [tasks, setTasks] = useState<Task[]>([])
@@ -35,7 +33,7 @@ export default function Dashboard() {
   }, [router])
 
   // 🚀 **タスク一覧の取得関数**
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     if (!user) return
 
     try {
@@ -50,13 +48,13 @@ export default function Dashboard() {
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : '不明なエラーが発生しました')
     }
-  }
+  }, [user])
 
   // 🚀 **タスク一覧の取得**
   useEffect(() => {
     if (!user) return
     fetchTasks()
-  }, [user])
+  }, [fetchTasks, user])
 
   // タスク追加処理を実行し、追加後にページデータを再取得
   const handleNewTaskSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

@@ -15,7 +15,7 @@ export default function LayoutWithTheme({ children }: { children: React.ReactNod
       document.documentElement.classList.add(theme)
       document.body.classList.add(theme)
     }
-  }, [context?.theme])
+  }, [context])
 
   return <>{children}</>
 }
