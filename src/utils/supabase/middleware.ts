@@ -36,11 +36,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login')
-
-  ) {
+  if (!user && !request.nextUrl.pathname.startsWith('/login')) {
     // ユーザーがいない場合、ログインページにリダイレクトすることで応答する可能性があります。
     const url = request.nextUrl.clone()
     url.pathname = '/login'
@@ -49,9 +45,9 @@ export async function updateSession(request: NextRequest) {
 
   // 重要: supabaseResponse オブジェクトをそのまま返す必要があります。
   // NextResponse.next() で新しいレスポンスオブジェクトを作成する場合は、次のことを確認してください:
-  // 1. リクエストを渡すこと: 
+  // 1. リクエストを渡すこと:
   //    const myNewResponse = NextResponse.next({ request })
-  // 2. クッキーをコピーすること: 
+  // 2. クッキーをコピーすること:
   //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
   // 3. myNewResponse オブジェクトを必要に応じて変更しますが、クッキーは変更しないでください！
   // 4. 最後に:
