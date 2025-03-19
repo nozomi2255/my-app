@@ -59,3 +59,35 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({ message: 'タスク追加成功' }, { status: 200 })
 }
+
+export async function PATCH(request: NextRequest) {
+  const supabase = await createClient()
+  const { id, title } = await request.json()
+
+  if (!id || !title) {
+    return NextResponse.json({ error: 'ID またはタイトルが不足しています。' }, { status: 400 })
+  }
+
+  const { error } = await supabase.from('tasks').update({ title }).eq('id', id)
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+
+  return NextResponse.json({ message: 'タスク更新成功' }, { status: 200 })
+}
+
+export async function DELETE(request: NextRequest) {
+  const supabase = await createClient()
+  const { id } = await request.json()
+
+  if (!id) {
+    return NextResponse.json({ error: 'ID が不足しています。' }, { status: 400 })
+  }
+
+  const { error } = await supabase.from('tasks').delete().eq('id', id)
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+
+  return NextResponse.json({ message: 'タスク削除成功' }, { status: 200 })
+}

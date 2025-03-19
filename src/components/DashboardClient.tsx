@@ -10,6 +10,8 @@ export default function Dashboard() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [newTaskTitle, setNewTaskTitle] = useState<string>('')
+  const [editTaskId, setEditTaskId] = useState<number | null>(null)
+  const [editTaskTitle, setEditTaskTitle] = useState<string>('')
 
   // 🚀 **ログイン状態のチェック**
   useEffect(() => {
@@ -87,6 +89,68 @@ export default function Dashboard() {
     setNewTaskTitle('')
   }
 
+  // 🚀 **タスクを編集するモードを開始**
+  const startEditing = (task: Task) => {
+    setEditTaskId(task.id)
+    setEditTaskTitle(task.title)
+  }
+
+  // 🚀 **タスクの更新**
+  const handleUpdateTask = async () => {
+    if (!editTaskTitle.trim() || editTaskId === null) return
+
+    try {
+      const response = await fetch('/api/tasks', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: editTaskId, title: editTaskTitle }),
+      })
+
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'タスク更新に失敗しました')
+
+      await fetchTasks()
+      setEditTaskId(null)
+      setEditTaskTitle('')
+    } catch (error) {
+      console.error('タスク更新エラー:', error)
+    }
+  }
+
+  // 🚀 **タスクの削除**
+  const handleDeleteTask = async (id: number) => {
+    try {
+      const response = await fetch('/api/tasks', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      })
+
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'タスク削除に失敗しました')
+
+      await fetchTasks()
+    } catch (error) {
+      console.error('タスク削除エラー:', error)
+    }
+  }
+
+  // 🚀 **ログアウト**
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/auth/logout', { method: 'POST' });
+  
+      if (!response.ok) {
+        throw new Error("ログアウトに失敗しました");
+      }
+  
+      // ログアウト後、ログインページへリダイレクト
+      router.push('/login');
+    } catch (error) {
+      console.error("ログアウトエラー:", error);
+    }
+  };
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">ダッシュボード</h1>
@@ -104,9 +168,53 @@ export default function Dashboard() {
         <h2 className="text-xl font-semibold mb-2">タスク一覧</h2>
         {tasks.length > 0 ? (
           <ul>
+            {/* タスクリストをマップして各タスク要素を生成 */}
             {tasks.map((task) => (
-              <li key={task.id} className="mb-2">
-                {task.title} - {task.completed ? '完了' : '未完了'}
+              <li key={task.id} className="mb-2 flex items-center">
+                {/* 編集中のタスクの場合、入力フィールドを表示 */}
+                {editTaskId === task.id ? (
+                  <input
+                    type="text"
+                    value={editTaskTitle}
+                    onChange={(e) => setEditTaskTitle(e.target.value)}
+                    className="border p-1 rounded"
+                  />
+                ) : (
+                  <span>{task.title}</span>
+                )}
+
+                {/* 操作ボタングループ: 編集モードか通常モードで表示が変わる */}
+                {editTaskId === task.id ? (
+                  <>
+                    <button
+                      onClick={handleUpdateTask}
+                      className="ml-2 px-2 py-1 bg-blue-500 text-white rounded"
+                    >
+                      保存
+                    </button>
+                    <button
+                      onClick={() => setEditTaskId(null)}
+                      className="ml-2 px-2 py-1 bg-gray-500 text-white rounded"
+                    >
+                      キャンセル
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => startEditing(task)}
+                      className="ml-2 px-2 py-1 bg-yellow-500 text-white rounded"
+                    >
+                      編集
+                    </button>
+                    <button
+                      onClick={() => handleDeleteTask(task.id)}
+                      className="ml-2 px-2 py-1 bg-red-500 text-white rounded"
+                    >
+                      削除
+                    </button>
+                  </>
+                )}
               </li>
             ))}
           </ul>
@@ -136,6 +244,12 @@ export default function Dashboard() {
           className="mt-4 px-4 py-2 bg-purple-500 text-white rounded"
         >
           カウンター画面へ遷移する
+        </button>
+        <button
+          onClick={handleLogout}
+          className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+        >
+          ログアウト
         </button>
       </div>
     </div>
