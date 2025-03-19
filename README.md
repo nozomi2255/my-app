@@ -73,19 +73,13 @@ src/
 ## 📊 ER 図（データベース構造）
 ```mermaid
 erDiagram
-  USERS {
-    string id PK
-    string email
-    string password_hash
-  }
   TASKS {
     int id PK
     string title
     string description
-    boolean completed
-    string user_id FK
+    timestamp created_at
+    uuid user_id FK
   }
-  USERS ||--o{ TASKS : owns
 ```
 
 ---
