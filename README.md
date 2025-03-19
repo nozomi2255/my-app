@@ -10,7 +10,7 @@
 
 ### **1️⃣ リポジトリをクローン**
 ```sh
-git clone https://github.com/your-repo.git
+git clone https://github.com/nozomi2255/my-app.git
 cd your-repo
 ```
 
